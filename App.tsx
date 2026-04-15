@@ -1,53 +1,39 @@
-import React from "react"; // Importar para criar componentes
-import { useState } from "react"; // Importar para guardar e atualizar estados
-import { SafeAreaView, SafeAreaViewBase, StyleSheet } from "react-native"; // Importa componentes visuais
+import React, { useState } from "react";
+import { SafeAreaView, StyleSheet } from "react-native";
 import Login from "./Login";
 import Cadastro from "./Cadastro";
- 
-function App() { // Componente principal
-  //useState criar uma variavel de estado chamada telaAtual  
-  //Ela começa com valor "login"
-  //SetTelaAtual é usada para trocar o valor
-  const [telaAtual, setTelaAtual] =  useState<'login' | 'cadastro'>('login');
- 
- 
- // Esta função muda a tela atual para "cadastro"
- const irParaCadastro = () => {
-    setTelaAtual('cadastro');
- };
- 
- const voltaParaLogin = () => {
-  setTelaAtual('login');
- };
- 
- return (
-  <SafeAreaView>
-   {/* {Navegação manual:
-   Se a telaAtual for "login", mostra a tela login
-   Se não for, mostra a tela Cadastro.
-   Isso substitui o uso de bibliotecas de navegação neste exemplo.
-   } */}
-{telaAtual === 'login' ? (
-   //Passa a função irParaCadastro como prop para o componente login
-   <Login irParaCadastro={irParaCadastro} />
-): (
-   //Passa a função VoltarParaLogin como prop para o componente cadastro
-      <Cadastro voltarParaLogin={voltaParaLogin} />
-)}
-  </SafeAreaView>
- );
+
+export default function App() {
+  const [telaAtual, setTelaAtual] = useState<'login' | 'cadastro'>('login');
+
+  const [usuario, setUsuario] = useState('');
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {telaAtual === 'login' ? (
+        <Login
+          irParaCadastro={() => setTelaAtual('cadastro')}
+          usuarioSalvo={usuario}
+          emailSalvo={email}
+          senhaSalva={senha}
+        />
+      ) : (
+        <Cadastro
+          voltarParaLogin={() => setTelaAtual('login')}
+          setUsuario={setUsuario}
+          setEmail={setEmail}
+          setSenha={setSenha}
+        />
+      )}
+    </SafeAreaView>
+  );
 }
- 
-//Criar os estilos do componente
+
 const styles = StyleSheet.create({
-  //Estilo principal da tela.
   container: {
-    //Faz a tela ocupar todo o espaço disponivel
     flex: 1,
-    //Fundo branco para ar visual limpo
-    backgroundColor: '#ffffff'
-  }
+    backgroundColor: "#f2f2f2",
+  },
 });
- 
-//Exporta o componente App para ser usado como entrada do projeto
-export default App;

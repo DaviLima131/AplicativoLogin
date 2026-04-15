@@ -1,42 +1,50 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
-import App from "./App";
- 
-type LoginProps = {
-    irParaCadastro: () => void;
+
+type Props = {
+  irParaCadastro: () => void;
+  usuarioSalvo: string;
+  emailSalvo: string;
+  senhaSalva: string;
 };
- 
-function Login({ irParaCadastro }: LoginProps) {
-  const [email, setEmail] = useState('');
+
+export default function Login({ irParaCadastro, usuarioSalvo, emailSalvo, senhaSalva }: Props) {
+  const [nomeOuEmail, setNomeOuEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [mensagem, setMensagem] = useState('');
- 
+
   const entrar = () => {
-    console.log('Tentando login com:', { email, senha });
- 
-    Alert.alert('Login', 'Botão entrar clicando com sucesso!')
- 
-    setMensagem(`Bem-vindo(a)! login tentando com o email: ${email}`)
+    if (!nomeOuEmail || !senha) {
+      Alert.alert("Erro", "Preencha tudo!");
+      return;
+    }
+
+    const usuarioValido =
+      nomeOuEmail === usuarioSalvo || nomeOuEmail === emailSalvo;
+
+    if (!usuarioValido || senha !== senhaSalva) {
+      Alert.alert("Erro", "Dados incorretos!");
+      return;
+    }
+
+    setMensagem(`Bem-vindo(a), ${usuarioSalvo}!`);
   };
- 
+
   return (
-    //View é o container principal - DIV PRINCIPAL
     <View style={styles.container}>
-      {/*Titulo da tela */}
       <Text style={styles.titulo}>Login</Text>
-      {/*TextInput é o campo onde o user digita o texto
-                Value recebe o estado atual
-                OnChangeText recebe a função para atualizar o estado */}
+
+      {usuarioSalvo ? (
+        <Text>Último usuário: {usuarioSalvo}</Text>
+      ) : null}
+
       <TextInput
         style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
+        placeholder="Nome ou Email"
+        value={nomeOuEmail}
+        onChangeText={setNomeOuEmail}
       />
-      {/* Campo de senha com secureTextEntry para esconder os caracteres*/}
+
       <TextInput
         style={styles.input}
         placeholder="Senha"
@@ -44,23 +52,23 @@ function Login({ irParaCadastro }: LoginProps) {
         onChangeText={setSenha}
         secureTextEntry
       />
+
       <View style={styles.botao}>
         <Button title="Entrar" onPress={entrar} />
       </View>
-      {/*{Botão que usa prop irParaCadastro para trocar de tela} */}
+
       <View style={styles.botao}>
         <Button title="Ir para Cadastro" onPress={irParaCadastro} />
       </View>
-      {/*{Exibe a mensagem somente quando a tela tiver conteúdo}*/}
+
       {mensagem ? <Text style={styles.mensagem}>{mensagem}</Text> : null}
     </View>
-  )
+  );
 }
- 
+
 const styles = StyleSheet.create({
-  //Container principal centralizado
   container: {
-    //flex: 1,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
@@ -72,23 +80,21 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
+    maxWidth: 300,
     borderWidth: 1,
-    borderColor: '#cccccccc',
+    borderColor: '#ccc',
     borderRadius: 8,
     padding: 12,
     marginBottom: 12,
- 
   },
   botao: {
     width: '100%',
+    maxWidth: 300,
     marginTop: 8,
- 
   },
   mensagem: {
     marginTop: 16,
     textAlign: 'center',
-    color: '#1f7a1f',
- 
+    color: 'green',
   },
 });
-export default Login;
