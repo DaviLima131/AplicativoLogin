@@ -102,4 +102,4 @@ const styles = StyleSheet.create({
     maxWidth: 300,
     marginTop: 8,
   },
-});
+});''
